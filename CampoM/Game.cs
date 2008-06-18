@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
+using System.Windows.Forms;
 
 namespace CampoM
 {
@@ -19,7 +20,7 @@ namespace CampoM
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Tabuleiro tabuleiro;
-        
+
 
         public Game()
         {
@@ -27,16 +28,8 @@ namespace CampoM
             Content.RootDirectory = "Content";
             Window.Title = "Campo Minado - Paradigmas de Linguagem de Programação";
             this.IsMouseVisible = true;
-            inicializaTela();
          }
 
-
-        private void inicializaTela()
-        {
-            //ISSO AQUI TEM QUE SER MODIFICADO!!!! PARA O TAMANHO QUE O USUARIO QUISER!!!!
-            graphics.PreferredBackBufferHeight = 20 * 24;
-            graphics.PreferredBackBufferWidth = 20 * 24;
-        }
 
         /// <summary>
         /// Allows the game to perform any initialization it needs to before starting to run.
@@ -46,7 +39,7 @@ namespace CampoM
         /// </summary>
         protected override void Initialize()
         {
-            base.Initialize();
+              base.Initialize();
         }
 
 
@@ -58,7 +51,17 @@ namespace CampoM
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            tabuleiro = new Tabuleiro(GraphicsDevice, 20, 20);
+            TelaInicial ti = new TelaInicial();
+            Application.Run(ti);
+            tabuleiro = new Tabuleiro(GraphicsDevice, ti.getTamanho, 20);
+            SetTamanhoTela();
+        }
+
+        private void SetTamanhoTela()
+        {
+            graphics.PreferredBackBufferHeight = this.tabuleiro.getTamanho * 24;
+            graphics.PreferredBackBufferWidth = this.tabuleiro.getTamanho * 24;
+            graphics.ApplyChanges();
         }
 
 
@@ -79,7 +82,7 @@ namespace CampoM
         protected override void Update(GameTime gameTime)
         {
             // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == Microsoft.Xna.Framework.Input.ButtonState.Pressed)
                 this.Exit();
 
             // TODO: Add your update logic here

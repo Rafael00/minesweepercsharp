@@ -9,15 +9,16 @@ namespace CampoM
 {
     class Tabuleiro
     {
-        private Casa[,]tela;
-        private int _numBombas;
+        private Casa[,] tela;
+        private int _numBombas, tamanho;
         private Random aleatorio;
         private GraphicsDevice graficos;
 
         public Tabuleiro(GraphicsDevice graficos, int tamanho, int numBombas)
         {
             this.graficos = graficos;
-            _numBombas = numBombas * (tamanho/2) ;
+            _numBombas = numBombas * (tamanho/2);
+            this.tamanho = tamanho;
             tela = new Casa[tamanho, tamanho];
             aleatorio = new Random();
             preenche();
@@ -47,6 +48,11 @@ namespace CampoM
                 casa = new SemBomba(this.graficos, x, y);
             }
             return (casa);
+        }
+
+        public int getTamanho
+        {
+            get { return this.tamanho; }
         }
 
 
