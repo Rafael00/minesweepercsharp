@@ -10,10 +10,6 @@ namespace CampoM
         /// </summary>
         static void Main(string[] args)
         {
-  //          TelaInicial ti = new TelaInicial();
-
-//            Application.Run(new TelaInicial());
-
             using (Game game = new Game())
             {    
                 game.Run();
