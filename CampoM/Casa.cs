@@ -13,6 +13,8 @@ namespace CampoM
         private GraphicsDevice graficos;
         protected Texture2D _imagem;
         private int posicaoX, posicaoY;
+        private string estado = "NAO_VISIVEL";
+        private int qntBombasVizinhas;
 
         public Casa(GraphicsDevice graficos, int x, int y)
         {
@@ -43,8 +45,19 @@ namespace CampoM
             _spriteBatch.Draw(getTexturaCasa, new Rectangle(getTexturaCasa.Width * posicaoX, getTexturaCasa.Height * posicaoY, getTexturaCasa.Width, getTexturaCasa.Height), Color.White);
         }
 
-        public virtual void mudaEstado() { }
+        public string getEstado
+        {
+            get{ return this.estado;}
+        }
 
+        public virtual void mudaEstado(Texture2D img) {
+            this.estado = "VISIVEL";
+        }
 
+        public int QntDeBombasVizinhas
+        {
+            get { return this.qntBombasVizinhas; }
+            set { this.qntBombasVizinhas = value; }
+        }
     }
 }

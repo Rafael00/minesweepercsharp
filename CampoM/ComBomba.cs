@@ -13,9 +13,9 @@ namespace CampoM
         {
         }
 
-        public override void mudaEstado()
+        public override void mudaEstado(Texture2D img)
         {
-            this._imagem = Texture2D.FromFile(base.getGrafico, @"imagens\casaComBombaClicada.png");
+            this._imagem = img;
         }
     }
 }

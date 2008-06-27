@@ -53,7 +53,7 @@ namespace CampoM
             spriteBatch = new SpriteBatch(GraphicsDevice);
             TelaInicial ti = new TelaInicial();
             Application.Run(ti);
-            tabuleiro = new Tabuleiro(GraphicsDevice, ti.getTamanho, 20);
+            tabuleiro = new Tabuleiro(GraphicsDevice, ti.getTamanho, ti.getQntBombas);
             SetTamanhoTela();
         }
 
