@@ -22,7 +22,7 @@ namespace CampoM
             posicaoY = y;
             this.graficos = graficos;
             _imagem = Texture2D.FromFile(graficos, @"imagens\casaEscondida.png");
-            delimitador = new Rectangle(x * 24, y * 24, 24, 24);
+            delimitador = new Rectangle(x * 28, y * 28, 28, 28);
         }
 
         public GraphicsDevice getGrafico

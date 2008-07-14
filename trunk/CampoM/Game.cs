@@ -19,8 +19,7 @@ namespace CampoM
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        Tabuleiro tabuleiro;
-
+        Jogo jogo;
 
         public Game()
         {
@@ -29,6 +28,7 @@ namespace CampoM
             Window.Title = "Campo Minado - Paradigmas de Linguagem de Programação";
             this.IsMouseVisible = true;
          }
+
 
 
         /// <summary>
@@ -53,14 +53,14 @@ namespace CampoM
             spriteBatch = new SpriteBatch(GraphicsDevice);
             TelaInicial ti = new TelaInicial();
             Application.Run(ti);
-            tabuleiro = new Tabuleiro(GraphicsDevice, ti.getTamanho, ti.getQntBombas);
+            jogo = new Jogo(ti.getNomeJogador, ti.getTamanho, ti.getQntBombas, GraphicsDevice);
             SetTamanhoTela();
         }
 
         private void SetTamanhoTela()
         {
-            graphics.PreferredBackBufferHeight = this.tabuleiro.getTamanho * 24;
-            graphics.PreferredBackBufferWidth = this.tabuleiro.getTamanho * 24;
+            graphics.PreferredBackBufferHeight = this.jogo.GetTamanhoTabuleiro * 28;
+            graphics.PreferredBackBufferWidth = this.jogo.GetTamanhoTabuleiro * 28;
             graphics.ApplyChanges();
         }
 
@@ -86,8 +86,7 @@ namespace CampoM
                 this.Exit();
 
             // TODO: Add your update logic here
-            tabuleiro.Update(gameTime);
-
+            jogo.Update();
             base.Update(gameTime);
         }
 
@@ -102,8 +101,8 @@ namespace CampoM
             // TODO: Add your drawing code here
             spriteBatch.Begin();
 
-            this.tabuleiro.draw(this.spriteBatch);
-            
+            this.jogo.Draw(this.spriteBatch);
+                       
             spriteBatch.End();
             base.Draw(gameTime);
         }
