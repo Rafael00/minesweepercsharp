@@ -18,14 +18,13 @@ namespace CampoM
         public Tabuleiro(GraphicsDevice graficos, int tamanho, int numBombas)
         {
             this.graficos = graficos;
-            _numBombas = numBombas * (tamanho/2);
+            _numBombas = 25 /*numBombas * (tamanho/2)*/;
             this.tamanho = tamanho;
             tela = new Casa[tamanho, tamanho];
             aleatorio = new Random();
             preencheArrayImagens();
             preencheTabuleiro();
         }
-
 
         private void preencheArrayImagens()
         {
@@ -52,7 +51,6 @@ namespace CampoM
                 }
             calculaQntBombasVizinhas();
         }
-
 
         private void calculaQntBombasVizinhas()
         {
@@ -127,30 +125,20 @@ namespace CampoM
 
         private void verificaVizinhos(int i, int j)
         {
-            if (tela[i, j].getEstado == "VISIVEL" || tela[i, j].QntDeBombasVizinhas != 0)
-            {
-                tela[i, j].mudaEstado(this.imagens[tela[i, j].QntDeBombasVizinhas]);
-            }
-            else
-            {
-                tela[i, j].mudaEstado(this.imagens[tela[i, j].QntDeBombasVizinhas]);
-                if (i > 0 && j > 0)
+            if (i >= 0 && j >= 0 && i <= (tela.GetLength(0) - 1) && j <= (tela.GetLength(1) - 1))
+                if (tela[i, j].Estado == "NAO_VISIVEL" && tela[i, j].QntDeBombasVizinhas == 0)
+                {
+                    tela[i, j].mudaEstado(this.imagens[0]);
                     verificaVizinhos(i - 1, j - 1);
-                if (i > 0)
                     verificaVizinhos(i - 1, j);
-                if (i > 0 && j < tela.GetLength(1) - 1)
                     verificaVizinhos(i - 1, j + 1);
-                if (j > 0)
                     verificaVizinhos(i, j - 1);
-                if (j < tela.GetLength(1) - 1)
                     verificaVizinhos(i, j + 1);
-                if (i < tela.GetLength(0) - 1 && j > 0)
                     verificaVizinhos(i + 1, j - 1);
-                if (i < tela.GetLength(0) - 1)
                     verificaVizinhos(i + 1, j);
-                if (i < tela.GetLength(0) - 1 && j < tela.GetLength(1) - 1)
                     verificaVizinhos(i + 1, j + 1);
-            }
+                }
+                else tela[i, j].mudaEstado(this.imagens[tela[i, j].QntDeBombasVizinhas]);
         }
 
         public void Update(GameTime gameTime)
@@ -159,7 +147,7 @@ namespace CampoM
                 for (int i = 0; i < tela.GetLength(0); i++)
                     for (int j = 0; j < tela.GetLength(1); j++)
                         if (tela[i,j].getRetangulo.Contains(Mouse.GetState().X, Mouse.GetState().Y) == true)
-                            {
+                            {                               
                                 verificaVizinhos(i, j);                              
                                 Console.WriteLine("linha {1} e coluna {2} qnt de bombas vizinhas é {0}", tela[i, j].QntDeBombasVizinhas, j, i);
                             }
