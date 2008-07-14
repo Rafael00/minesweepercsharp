@@ -45,13 +45,15 @@ namespace CampoM
             _spriteBatch.Draw(getTexturaCasa, new Rectangle(getTexturaCasa.Width * posicaoX, getTexturaCasa.Height * posicaoY, getTexturaCasa.Width, getTexturaCasa.Height), Color.White);
         }
 
-        public string getEstado
+        public string Estado
         {
+
             get{ return this.estado;}
+            set {this.estado = value; }
         }
 
         public virtual void mudaEstado(Texture2D img) {
-            this.estado = "VISIVEL";
+         
         }
 
         public int QntDeBombasVizinhas
