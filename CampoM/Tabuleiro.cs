@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
+
 using Microsoft.Xna.Framework;
 
 namespace CampoM
@@ -141,16 +141,21 @@ namespace CampoM
                 else tela[i, j].mudaEstado(this.imagens[tela[i, j].QntDeBombasVizinhas]);
         }
 
-        public void Update(GameTime gameTime)
+        public void JogadaPC(int i, int j)
         {
-            if (Mouse.GetState().LeftButton == ButtonState.Pressed)
-                for (int i = 0; i < tela.GetLength(0); i++)
-                    for (int j = 0; j < tela.GetLength(1); j++)
-                        if (tela[i,j].getRetangulo.Contains(Mouse.GetState().X, Mouse.GetState().Y) == true)
-                            {                               
-                                verificaVizinhos(i, j);                              
-                                Console.WriteLine("linha {1} e coluna {2} qnt de bombas vizinhas é {0}", tela[i, j].QntDeBombasVizinhas, j, i);
-                            }
+            verificaVizinhos(i, j);
+        }
+
+        public Casa Update(int mouseX, int mouseY)
+        {
+            for (int i = 0; i < tela.GetLength(0); i++)
+                for (int j = 0; j < tela.GetLength(1); j++)
+                    if (tela[i, j].getRetangulo.Contains(mouseX, mouseY) == true)
+                    {
+                        verificaVizinhos(i, j);
+                        return tela[i, j];
+                    }
+            return null;
         }
     }
 }

@@ -82,14 +82,21 @@ namespace CampoM
 
         }
 
+        public int getQntBombas
+        {
+            get { return 5; }
+        }
+
+        public string getNomeJogador
+        {
+            get { return this.nome; }
+        }
+
         private void TelaInicial_Load(object sender, EventArgs e)
         {
 
         }
 
-        public int getQntBombas
-        {
-            get { return 5;}
-        }
+
     }
 }
