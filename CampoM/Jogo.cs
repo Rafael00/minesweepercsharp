@@ -15,7 +15,7 @@ namespace CampoM
         private string jogadorDaVez;
         private PC jogadorPC;
         private Humano jogadorHumano;
-
+        private MouseState ultimoEstado, estadoAtual;
 
         public Jogo(string nomeJogador, int tamanhoTab, int qntBombas, GraphicsDevice graficos)
         {
@@ -41,28 +41,14 @@ namespace CampoM
 
         public void Update()
         {
-            Casa casa;
+            this.estadoAtual = Mouse.GetState();
 
-            if (Mouse.GetState().LeftButton == ButtonStatePressed)
-            {
-                casa = this.tabuleiro.Update(Mouse.GetState().X, Mouse.GetState().Y);
-                //Significa que nao houve nenhum clique.
-                if (casa == null)
-                    return;
-                if (casa.ToString().Equals("CampoM.SemBomba"))
-                    passaVez();
-                else if (this.jogadorDaVez == PC)
+            if (this.estadoAtual.LeftButton == ButtonState.Pressed
+                && this.ultimoEstado.LeftButton == ButtonState.Released)
                 {
-                    jogadorPC.GetBombasEncontradas = 1;
-                    this.tabuleiro.JogadaPC(jogadorPC.Joga(), jogadorPC.Joga());
+                    GerenciaJogada(Mouse.GetState().X, Mouse.GetState().Y);
                 }
-                else jogadorHumano.GetBombasEncontradas = 1;
-                
-                if (jogadorPC.GetBombasEncontradas == this.qntBombas / 2 + 1)
-                    FinalizaJogo(jogadorPC);
-                else if (jogadorHumano.GetBombasEncontradas == this.qntBombas / 2 + 1)
-                    FinalizaJogo(jogadorHumano);
-            }
+            this.ultimoEstado = this.estadoAtual;
         }
 
         private void FinalizaJogo(Jogador jogador)
@@ -71,18 +57,50 @@ namespace CampoM
             //Application.Run(ti);
         }
 
+        private void GerenciaJogada(int mouseX, int mouseY)
+        {
+            //Verifica se nenhuma casa foi clicada ou se a casa já foi clicada. Caso afirmativo nao faz nada.
+            if (this.tabuleiro.CasaJaClicada(mouseX, mouseY))
+                return;
+             //Se a casa clicada nao tiver bomba.
+            if (this.tabuleiro.GetTipoDaUltimaCasaClicada.Equals("CampoM.SemBomba"))
+                passaVez();
+            else if (this.jogadorDaVez == PC)
+            {
+                AndroidJoga();
+            }
+            else jogadorHumano.GetBombasEncontradas = 1;
+
+            VerificaFimDoJogo();
+        }
+
+        private void VerificaFimDoJogo()
+        {
+            if (jogadorPC.GetBombasEncontradas == this.qntBombas / 2 + 1)
+                FinalizaJogo(jogadorPC);
+            else if (jogadorHumano.GetBombasEncontradas == this.qntBombas / 2 + 1)
+                FinalizaJogo(jogadorHumano);
+        }
+
+        private void AndroidJoga()
+        {
+            int i = jogadorPC.Joga();
+            int j = jogadorPC.Joga();
+            this.tabuleiro.JogadaPC(i, j);
+            Console.WriteLine("Android jogou!!! i: {0} j: {1}", i, j);
+        }
+
         private void passaVez()
         {
             if (this.jogadorDaVez.Equals(HUMANO))
             {
-                Console.WriteLine("Android jogou!!!");
-                //.IsMouseVisible = true;
                 this.jogadorDaVez = PC;
-                this.tabuleiro.JogadaPC(jogadorPC.Joga(), jogadorPC.Joga());
+                AndroidJoga();
             }
             else{
                 this.jogadorDaVez = HUMANO;
                 Console.WriteLine("Eu joguei!!!");
+                AndroidJoga();
             }
         }
 

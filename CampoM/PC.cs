@@ -15,7 +15,7 @@ namespace CampoM
         {
             //Momentaneo.
             Random r = new Random();
-            return r.Next(0, 29);
+            return r.Next(0, 14);
         }
     }
 }
