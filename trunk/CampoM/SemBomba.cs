@@ -16,7 +16,7 @@ namespace CampoM
 
         public override void mudaEstado(Texture2D img)
         {
-            base.Estado = "VISIVEL";
+            base.mudaEstado(img);
             this._imagem = img;
         }
     }
