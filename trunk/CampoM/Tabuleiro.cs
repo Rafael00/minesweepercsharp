@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Microsoft.Xna.Framework.Graphics;
-
 using Microsoft.Xna.Framework;
 
 namespace CampoM
@@ -10,61 +7,39 @@ namespace CampoM
     class Tabuleiro
     {
         private Casa[,] tela;
-        private Texture2D[] imagens;
-        private int _numBombas, tamanho;
+        private int numBombas, tamanho;
         private Random aleatorio;
         private GraphicsDevice graficos;
         private string tipoUltimaCasa;
+        private ImageManager Im;
 
-        public Tabuleiro(GraphicsDevice graficos, int tamanho, int numBombas)
+        public Tabuleiro(GraphicsDevice graficos, int tamanho, int numBombas, ImageManager imageManager)
         {
             this.graficos = graficos;
-            _numBombas = 250 /*numBombas * (tamanho/2)*/;
+            this.numBombas = numBombas;
             this.tamanho = tamanho;
+            Im = imageManager;
             tela = new Casa[tamanho, tamanho];
             aleatorio = new Random();
-            preencheArrayImagens();
             preencheTabuleiro();
-        }
-
-        private void preencheArrayImagens()
-        {
-            imagens = new Texture2D[12];
-            imagens[0] = Texture2D.FromFile(graficos, @"imagens\casaVazia.png");
-            imagens[1] = Texture2D.FromFile(graficos, @"imagens\casa1.png");
-            imagens[2] = Texture2D.FromFile(graficos, @"imagens\casa2.png");
-            imagens[3] = Texture2D.FromFile(graficos, @"imagens\casa3.png");
-            imagens[4] = Texture2D.FromFile(graficos, @"imagens\casa4.png");
-            imagens[5] = Texture2D.FromFile(graficos, @"imagens\casa5.png");
-            imagens[6] = Texture2D.FromFile(graficos, @"imagens\casa6.png");
-            imagens[7] = Texture2D.FromFile(graficos, @"imagens\casa7.png");
-            imagens[8] = Texture2D.FromFile(graficos, @"imagens\casa8.png");
-            imagens[9] = Texture2D.FromFile(graficos, @"imagens\casaBomba.png");
-            imagens[10] = Texture2D.FromFile(graficos, @"imagens\BandeiraVermelha.png");
-            imagens[11] = Texture2D.FromFile(graficos, @"imagens\BandeiraAzul.png");
         }
 
         private void preencheTabuleiro()
         {
-            for (int i = 0; i < tela.GetLength(0); i++)
-                for (int j = 0; j < tela.GetLength(1); j++)
-                {
-                    tela[i, j] = escolhe(i, j);
-                     
-                }
-            calculaQntBombasVizinhas();
+            PreencheComCasaBomba();
+            PreencheComCasaSemBomba();
+            CalculaQntBombasVizinhas();
         }
 
-        private void calculaQntBombasVizinhas()
+        private void CalculaQntBombasVizinhas()
         {
-            int linha, coluna, condicaoDeParadaI, condicaoDeParadaJ;
-            int qntBombasVizinhas = 0;
+            int linha, coluna, condicaoDeParadaI, condicaoDeParadaJ, qntBombasVizinhas = 0;
 
             for (int i = 0; i < tela.GetLength(0); i++)
                 for (int j = 0; j < tela.GetLength(1); j++){
                     if (tela[i, j].GetType().FullName.Equals("CampoM.ComBomba"))
                     {
-                        tela[i, j].QntDeBombasVizinhas = 9;
+                        tela[i, j].GetQntDeBombasVizinhas = 9;
                         continue;
                     }
                     if ( i == 0)
@@ -73,12 +48,14 @@ namespace CampoM
                     if ( j == 0)
                         coluna = 0;
                     else coluna = -1;
+
                     if ( i == tela.GetLength(0) - 1)
                         condicaoDeParadaI = 0;
                     else condicaoDeParadaI = 1;
                     if ( j == tela.GetLength(1) - 1)
                         condicaoDeParadaJ = 0;
                     else condicaoDeParadaJ = 1;
+
                     while (coluna <= condicaoDeParadaJ)
                     {
                         while (linha <= condicaoDeParadaI)
@@ -92,46 +69,60 @@ namespace CampoM
                             linha = 0;
                         else linha = -1;
                     }
-                    tela[i, j].QntDeBombasVizinhas = qntBombasVizinhas;
+                    tela[i, j].GetQntDeBombasVizinhas = qntBombasVizinhas;
                     qntBombasVizinhas = 0;
                 }
         }
 
-        private Casa escolhe(int x, int y)
+        private void PreencheComCasaBomba()
         {
-            Casa casa;
+            int linha, coluna, numBombasAux = numBombas;
 
-            int tipo = aleatorio.Next(0, 7);
-            if (tipo <= 2 && _numBombas > 0)
+            while (numBombasAux > 0)
             {
-                casa = new ComBomba(this.graficos, x, y);
-                _numBombas--;
+                linha = aleatorio.Next(0, tamanho);
+                coluna = aleatorio.Next(0, tamanho);
+                if (tela[linha, coluna] == null)
+                {
+                    tela[linha, coluna] = new ComBomba(graficos, linha, coluna);
+                    numBombasAux--;
+                }
             }
-            else
-            {
-                casa = new SemBomba(this.graficos, x, y);
-            }
-            return (casa);
+
+        }
+  
+        private void PreencheComCasaSemBomba(){
+            for (int i = 0; i < tela.GetLength(0); i++)
+                for (int j = 0; j < tela.GetLength(1); j++)
+                    if (tela[i, j] == null)
+                        tela[i, j] = new SemBomba(graficos, i, j);
         }
 
         public int getTamanho
         {
-            get { return this.tamanho; }
+            get { return tamanho; }
         }
 
-        public void draw(SpriteBatch _spriteBatch)
+        public void draw(SpriteBatch spriteBatch)
         {
             for (int i = 0; i < tela.GetLength(0); i++)
                 for (int j = 0; j < tela.GetLength(1); j++)
-                    tela[i, j].draw(_spriteBatch);
+                    tela[i, j].draw(spriteBatch);
+            placar(spriteBatch);
+        }
+
+        private void placar(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(Im.GetImagemPlacar, new Rectangle(0, 20, 124, 518), Color.White);
+
         }
 
         private void verificaVizinhos(int i, int j, string jogador)
         {
             if (i >= 0 && j >= 0 && i <= (tela.GetLength(0) - 1) && j <= (tela.GetLength(1) - 1))
-                if (tela[i, j].GetEstado == "NAO_VISIVEL" && tela[i, j].QntDeBombasVizinhas == 0)
+                if (tela[i, j].GetEstado == "NAO_VISIVEL" && tela[i, j].GetQntDeBombasVizinhas == 0)
                 {
-                    tela[i, j].mudaEstado(this.imagens[0]);
+                    tela[i, j].mudaEstado(this.Im.GetImagemCasa(0));
                     verificaVizinhos(i - 1, j - 1, jogador);
                     verificaVizinhos(i - 1, j, jogador);
                     verificaVizinhos(i - 1, j + 1, jogador);
@@ -141,13 +132,13 @@ namespace CampoM
                     verificaVizinhos(i + 1, j, jogador);
                     verificaVizinhos(i + 1, j + 1, jogador);
                 }
-                else if (tela[i, j].QntDeBombasVizinhas == 9 && jogador.Equals("PC"))
+                else if (tela[i, j].GetQntDeBombasVizinhas == 9 && jogador.Equals("PC"))
                         //Recebe bandeira vermelha.    
-                        tela[i, j].mudaEstado(this.imagens[10]);
-                else if (tela[i, j].QntDeBombasVizinhas == 9 && jogador.Equals("HUMANO"))
+                        tela[i, j].mudaEstado(Im.GetImagemCasa(10));
+                else if (tela[i, j].GetQntDeBombasVizinhas == 9 && jogador.Equals("HUMANO"))
                         //Recebe bandeira vermelha.    
-                        tela[i, j].mudaEstado(this.imagens[11]);
-                else tela[i, j].mudaEstado(this.imagens[tela[i,j].QntDeBombasVizinhas]);
+                        tela[i, j].mudaEstado(Im.GetImagemCasa(11));
+                else tela[i, j].mudaEstado(Im.GetImagemCasa(tela[i,j].GetQntDeBombasVizinhas));
         }
 
         public void JogadaPC(int i, int j)
@@ -155,26 +146,18 @@ namespace CampoM
             verificaVizinhos(i, j, "PC");
         }
 
-        public void Update()
-        {/*
-            for (int i = 0; i < tela.GetLength(0); i++)
-                for (int j = 0; j < tela.GetLength(1); j++)
-                    if (tela[i, j].getRetangulo.Contains(mouseX, mouseY) == true)
-                    {
-                        verificaVizinhos(i, j, "HUMANO");
-                        return tela[i, j];
-                    }
-            return null;*/
-        }
-
         public string GetTipoDaUltimaCasaClicada
         {
             get { return tipoUltimaCasa; }
-            set { this.tipoUltimaCasa = value; }
+            set { tipoUltimaCasa = value; }
         }
 
+        public Casa[,] GetTela
+        {
+            get { return tela; }
+        }
 
-        public bool CasaJaClicada(int mouseX, int mouseY)
+        public bool CasaClicada(int mouseX, int mouseY)
         {
             for (int i = 0; i < tela.GetLength(0); i++)
                 for (int j = 0; j < tela.GetLength(1); j++)
@@ -185,6 +168,7 @@ namespace CampoM
                             tipoUltimaCasa = tela[i,j].ToString();
                             return false;
                         }
+                        //Retorna true se a casa ja tinha sido clicada antes.
                         else return true;
             return true;
         }

@@ -22,7 +22,7 @@ namespace CampoM
             posicaoY = y;
             this.graficos = graficos;
             _imagem = Texture2D.FromFile(graficos, @"imagens\casaEscondida.png");
-            delimitador = new Rectangle(x * 28, y * 28, 28, 28);
+            delimitador = new Rectangle(x * 28 + 124, y * 28, 28, 28);
         }
 
         public GraphicsDevice getGrafico
@@ -40,9 +40,9 @@ namespace CampoM
             get{ return this.delimitador;}
         }
 
-        public void draw(SpriteBatch _spriteBatch)
+        public void draw(SpriteBatch spriteBatch)
         {
-            _spriteBatch.Draw(getTexturaCasa, new Rectangle(getTexturaCasa.Width * posicaoX, getTexturaCasa.Height * posicaoY, getTexturaCasa.Width, getTexturaCasa.Height), Color.White);
+            spriteBatch.Draw(getTexturaCasa, new Rectangle(124 + getTexturaCasa.Width * posicaoX, getTexturaCasa.Height * posicaoY, getTexturaCasa.Width, getTexturaCasa.Height), Color.White);
         }
 
         public string GetEstado
@@ -58,7 +58,7 @@ namespace CampoM
         }
             
         
-        public int QntDeBombasVizinhas
+        public int GetQntDeBombasVizinhas
         {
             get { return this.qntBombasVizinhas; }
             set { this.qntBombasVizinhas = value; }

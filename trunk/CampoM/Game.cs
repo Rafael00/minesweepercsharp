@@ -1,13 +1,6 @@
-using System;
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Net;
-using Microsoft.Xna.Framework.Storage;
 using System.Windows.Forms;
 
 namespace CampoM
@@ -59,8 +52,8 @@ namespace CampoM
 
         private void SetTamanhoTela()
         {
-            graphics.PreferredBackBufferHeight = this.jogo.GetTamanhoTabuleiro * 28;
-            graphics.PreferredBackBufferWidth = this.jogo.GetTamanhoTabuleiro * 28;
+            graphics.PreferredBackBufferHeight = jogo.GetTamanhoTabuleiro * 28;
+            graphics.PreferredBackBufferWidth = jogo.GetTamanhoTabuleiro * 34;
             graphics.ApplyChanges();
         }
 
@@ -71,7 +64,7 @@ namespace CampoM
         /// </summary>
         protected override void UnloadContent()
         {
-            // TODO: Unload any non ContentManager content here
+
         }
 
         /// <summary>
@@ -84,8 +77,6 @@ namespace CampoM
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == Microsoft.Xna.Framework.Input.ButtonState.Pressed)
                 this.Exit();
-
-            // TODO: Add your update logic here
             jogo.Update();
             base.Update(gameTime);
         }
@@ -96,12 +87,11 @@ namespace CampoM
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            graphics.GraphicsDevice.Clear(Color.White);
+            graphics.GraphicsDevice.Clear(Color.Black);
 
-            // TODO: Add your drawing code here
             spriteBatch.Begin();
 
-            this.jogo.Draw(this.spriteBatch);
+            jogo.Draw(spriteBatch);
                        
             spriteBatch.End();
             base.Draw(gameTime);

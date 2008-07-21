@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System.Text;
+
 
 namespace CampoM
 {
@@ -16,6 +15,7 @@ namespace CampoM
         private PC jogadorPC;
         private Humano jogadorHumano;
         private MouseState ultimoEstado, estadoAtual;
+        private ImageManager Im;
 
         public Jogo(string nomeJogador, int tamanhoTab, int qntBombas, GraphicsDevice graficos)
         {
@@ -23,86 +23,95 @@ namespace CampoM
             jogadorHumano = new Humano(nomeJogador);
             this.tamanhoTab = tamanhoTab;
             this.qntBombas = qntBombas;
-            this.jogadorDaVez = HUMANO;
-            this.tabuleiro = new Tabuleiro(graficos, this.tamanhoTab, this.qntBombas);
-
+            Im = new ImageManager(graficos);
+            jogadorDaVez = HUMANO;
+            tabuleiro = new Tabuleiro(graficos, this.tamanhoTab, this.qntBombas, Im);
+            
         }
-
 
         public int GetTamanhoTabuleiro
         {
-            get {return this.tabuleiro.getTamanho; }
+            get {return tabuleiro.getTamanho; }
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            this.tabuleiro.draw(spriteBatch);
+            tabuleiro.draw(spriteBatch);
+            jogadorPC.Draw(spriteBatch, Im);
+            //jogadorHumano.Draw(spriteBatch, Im);
         }
 
+        
         public void Update()
         {
-            this.estadoAtual = Mouse.GetState();
-
-            if (this.estadoAtual.LeftButton == ButtonState.Pressed
-                && this.ultimoEstado.LeftButton == ButtonState.Released)
+            if (jogadorDaVez == PC)
+            {
+                //System.Threading.Thread.Sleep(1500);
+                AndroidJoga();
+                return;
+            }
+            estadoAtual = Mouse.GetState();
+            if (estadoAtual.LeftButton == ButtonState.Pressed
+                && ultimoEstado.LeftButton == ButtonState.Released)
                 {
                     GerenciaJogada(Mouse.GetState().X, Mouse.GetState().Y);
                 }
-            this.ultimoEstado = this.estadoAtual;
+            ultimoEstado = estadoAtual;
         }
 
         private void FinalizaJogo(Jogador jogador)
         {
             //Criar o Windows form mostrando o vencedor.
             //Application.Run(ti);
+            Console.WriteLine("{0} GANHOUUU!!!!", jogador.GetNomeJogador);
         }
 
         private void GerenciaJogada(int mouseX, int mouseY)
         {
             //Verifica se nenhuma casa foi clicada ou se a casa já foi clicada. Caso afirmativo nao faz nada.
-            if (this.tabuleiro.CasaJaClicada(mouseX, mouseY))
+            if (tabuleiro.CasaClicada(mouseX, mouseY))
+                //Nao faz nada se a casa já tivesse sido clicada antes.
                 return;
-             //Se a casa clicada nao tiver bomba.
-            if (this.tabuleiro.GetTipoDaUltimaCasaClicada.Equals("CampoM.SemBomba"))
-                passaVez();
-            else if (this.jogadorDaVez == PC)
+            //Se a casa clicada nao tiver bomba, eu passo a vez para android jogar.
+            if (tabuleiro.GetTipoDaUltimaCasaClicada.Equals("CampoM.SemBomba"))
+                jogadorDaVez = PC;
+            else
             {
-                AndroidJoga();
+                jogadorDaVez = HUMANO;
+                jogadorHumano.GetBombasEncontradas = 1;
             }
-            else jogadorHumano.GetBombasEncontradas = 1;
-
             VerificaFimDoJogo();
         }
 
         private void VerificaFimDoJogo()
         {
-            if (jogadorPC.GetBombasEncontradas == this.qntBombas / 2 + 1)
+            if (jogadorPC.GetBombasEncontradas == qntBombas / 2 + 1)
                 FinalizaJogo(jogadorPC);
-            else if (jogadorHumano.GetBombasEncontradas == this.qntBombas / 2 + 1)
+            else if (jogadorHumano.GetBombasEncontradas == qntBombas / 2 + 1)
                 FinalizaJogo(jogadorHumano);
         }
-
+        
         private void AndroidJoga()
         {
-            int i = jogadorPC.Joga();
-            int j = jogadorPC.Joga();
-            this.tabuleiro.JogadaPC(i, j);
-            Console.WriteLine("Android jogou!!! i: {0} j: {1}", i, j);
+            jogadorPC.Joga(tabuleiro.GetTela);
+            tabuleiro.JogadaPC(jogadorPC.GetColunaJogada, jogadorPC.GetLinhaJogada);
+            //Caso ele acerte uma bomba ele verifica se o jogo acabou e se nao estiver acabado joga novamente.
+            if (!VerificaSeAcertou(jogadorPC.GetColunaJogada, jogadorPC.GetLinhaJogada))
+                jogadorDaVez = HUMANO;
+            Console.WriteLine("Android jogou!!! i: {0} j: {1}", jogadorPC.GetLinhaJogada, jogadorPC.GetColunaJogada);
+            Console.WriteLine("Android Acertou {0} bombas", jogadorPC.GetBombasEncontradas);
+            VerificaFimDoJogo();
         }
 
-        private void passaVez()
+        private bool VerificaSeAcertou(int coluna, int linha)
         {
-            if (this.jogadorDaVez.Equals(HUMANO))
+            if (tabuleiro.GetTela[coluna, linha].ToString().Equals("CampoM.ComBomba"))
             {
-                this.jogadorDaVez = PC;
-                AndroidJoga();
+                Console.WriteLine("INCREMENTOU BOMBAS ANDROID");
+                jogadorPC.GetBombasEncontradas = 1;
+                return true;
             }
-            else{
-                this.jogadorDaVez = HUMANO;
-                Console.WriteLine("Eu joguei!!!");
-                AndroidJoga();
-            }
+            return false;
         }
-
     }
 }
