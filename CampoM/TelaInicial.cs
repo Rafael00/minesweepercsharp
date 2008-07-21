@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 
 namespace CampoM
@@ -33,7 +28,7 @@ namespace CampoM
             if (easy.Checked == true)
             {
                 tamanho = 5;
-                qntBombas = 10;
+                qntBombas = 7;
             }
 
         }
@@ -43,7 +38,7 @@ namespace CampoM
             if (normal.Checked == true)
             {
                 tamanho = 10;
-                qntBombas = 40;
+                qntBombas = 27;
             }
         }
 
@@ -52,7 +47,7 @@ namespace CampoM
             if (hard.Checked == true)
             {
                 tamanho = 15;
-                qntBombas = 70;
+                qntBombas = 51;
             }
         }
 
@@ -61,21 +56,36 @@ namespace CampoM
             if (expert.Checked == true)
             {
                 tamanho = 20;
-                qntBombas = 100;
+                qntBombas = 79;
             }
         }
 
         private void tabuleiro_TextChanged(object sender, EventArgs e)
         {
-            tamanho = int.Parse(this.tabuleiro.Text);
+            try
+            {
+                tamanho = int.Parse(this.tabuleiro.Text);
+            }
+            catch
+            {
+                //if (tabuleiro.Text.Length > 0)
+                   //tabuleiro.Text = tabuleiro.Text.Substring(0, tabuleiro.Text.Length - 1);
+                tabuleiro.Text = "";
+            }
         }
 
         private void qntBombasText_TextChanged(object sender, EventArgs e)
         {
-            qntBombas = int.Parse(this.qntBombasText.Text);
+            try
+            {
+                qntBombas = int.Parse(this.qntBombasText.Text);
+            }
+            catch 
+            {
+                qntBombasText.Text = "";
+            }
         }
         
-
         public int getTamanho
         {
             get { return this.tamanho; }
@@ -84,7 +94,7 @@ namespace CampoM
 
         public int getQntBombas
         {
-            get { return 5; }
+            get { return this.qntBombas; }
         }
 
         public string getNomeJogador

@@ -6,7 +6,7 @@ namespace CampoM
 {
     class Jogador
     {
-        private int numBombasEncontradas = 0;
+        private int numBombasEncontradas;
         private string nomeJogador;
 
         public Jogador(string nomeJogador)
@@ -17,14 +17,14 @@ namespace CampoM
 
         public string GetNomeJogador
         {
-            get { return this.nomeJogador; }
+            get { return nomeJogador; }
         }
 
 
         public int GetBombasEncontradas
         {
-            get { return this.numBombasEncontradas; }
-            set { this.numBombasEncontradas += value; }
+            get { return numBombasEncontradas; }
+            set { numBombasEncontradas += value; }
         }
         
 
