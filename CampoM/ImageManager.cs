@@ -9,12 +9,14 @@ namespace CampoM
     {
         private GraphicsDevice graficos;
         private Texture2D[] imagens;
-        private Texture2D placar, setaPC, setaHumano;
+        private Texture2D placar, setaPC, setaHumano, selecaoAzul, selecaoVermelha;
 
         public ImageManager(GraphicsDevice graficos)
         {
             this.graficos = graficos;
             imagens = new Texture2D[12];
+            selecaoVermelha = Texture2D.FromFile(graficos, @"imagens\selecao_vermelha.png");
+            selecaoAzul = Texture2D.FromFile(graficos, @"imagens\selecao_azul.png");
             placar = Texture2D.FromFile(graficos, @"imagens\Placar.png");
             setaHumano = Texture2D.FromFile(graficos, @"imagens\seta_blue.png");
             setaPC = Texture2D.FromFile(graficos, @"imagens\seta_red.png");
@@ -40,6 +42,16 @@ namespace CampoM
         public Texture2D GetSetaPC
         {
             get { return setaPC; }
+        }
+
+        public Texture2D GetSelecaoVermelha
+        {
+            get { return selecaoVermelha; }
+        }
+
+        public Texture2D GetSelecaoAzul
+        {
+            get { return selecaoAzul; }
         }
 
         public Texture2D GetSetaHumano
