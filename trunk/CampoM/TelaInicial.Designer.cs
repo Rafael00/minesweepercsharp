@@ -33,13 +33,13 @@
             this.nomeJogador = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.qntBombasText = new System.Windows.Forms.TextBox();
-            this.easy = new System.Windows.Forms.CheckBox();
-            this.normal = new System.Windows.Forms.CheckBox();
-            this.hard = new System.Windows.Forms.CheckBox();
-            this.expert = new System.Windows.Forms.CheckBox();
-            this.tabuleiro = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
+            this.qntBombasEscolhida = new System.Windows.Forms.TextBox();
+            this.outroTamanho = new System.Windows.Forms.TextBox();
+            this.easy = new System.Windows.Forms.RadioButton();
+            this.normal = new System.Windows.Forms.RadioButton();
+            this.dificil = new System.Windows.Forms.RadioButton();
+            this.expert = new System.Windows.Forms.RadioButton();
+            this.outro = new System.Windows.Forms.RadioButton();
             this.SuspendLayout();
             // 
             // OkNome
@@ -56,8 +56,9 @@
             // nomeJogador
             // 
             this.nomeJogador.Location = new System.Drawing.Point(128, 30);
+            this.nomeJogador.MaxLength = 10;
             this.nomeJogador.Name = "nomeJogador";
-            this.nomeJogador.Size = new System.Drawing.Size(100, 20);
+            this.nomeJogador.Size = new System.Drawing.Size(74, 20);
             this.nomeJogador.TabIndex = 1;
             this.nomeJogador.TextChanged += new System.EventHandler(this.nomeJogador_TextChanged);
             // 
@@ -79,89 +80,95 @@
             this.label2.TabIndex = 2;
             this.label2.Text = "Quantidade de bombas:";
             // 
-            // qntBombasText
+            // qntBombasEscolhida
             // 
-            this.qntBombasText.Location = new System.Drawing.Point(192, 59);
-            this.qntBombasText.Name = "qntBombasText";
-            this.qntBombasText.Size = new System.Drawing.Size(36, 20);
-            this.qntBombasText.TabIndex = 1;
-            this.qntBombasText.TextChanged += new System.EventHandler(this.qntBombasText_TextChanged);
+            this.qntBombasEscolhida.Location = new System.Drawing.Point(166, 59);
+            this.qntBombasEscolhida.Name = "qntBombasEscolhida";
+            this.qntBombasEscolhida.Size = new System.Drawing.Size(36, 20);
+            this.qntBombasEscolhida.TabIndex = 1;
+            this.qntBombasEscolhida.TextChanged += new System.EventHandler(this.qntBombasEscolhida_TextChanged);
+            // 
+            // outroTamanho
+            // 
+            this.outroTamanho.Enabled = false;
+            this.outroTamanho.Location = new System.Drawing.Point(166, 179);
+            this.outroTamanho.Name = "outroTamanho";
+            this.outroTamanho.Size = new System.Drawing.Size(32, 20);
+            this.outroTamanho.TabIndex = 1;
+            this.outroTamanho.TextChanged += new System.EventHandler(this.outroTamanho_TextChanged);
             // 
             // easy
             // 
             this.easy.AutoSize = true;
-            this.easy.Location = new System.Drawing.Point(116, 95);
+            this.easy.Checked = true;
+            this.easy.Location = new System.Drawing.Point(104, 95);
             this.easy.Name = "easy";
-            this.easy.Size = new System.Drawing.Size(49, 17);
-            this.easy.TabIndex = 3;
-            this.easy.Text = "Easy";
+            this.easy.Size = new System.Drawing.Size(47, 17);
+            this.easy.TabIndex = 4;
+            this.easy.TabStop = true;
+            this.easy.Text = "Fácil";
             this.easy.UseVisualStyleBackColor = true;
-            this.easy.CheckStateChanged += new System.EventHandler(this.easy_CheckStateChanged);
+            this.easy.CheckedChanged += new System.EventHandler(this.facil_CheckedChanged);
             // 
             // normal
             // 
             this.normal.AutoSize = true;
-            this.normal.Location = new System.Drawing.Point(116, 118);
+            this.normal.Location = new System.Drawing.Point(104, 118);
             this.normal.Name = "normal";
-            this.normal.Size = new System.Drawing.Size(59, 17);
-            this.normal.TabIndex = 3;
+            this.normal.Size = new System.Drawing.Size(58, 17);
+            this.normal.TabIndex = 4;
             this.normal.Text = "Normal";
             this.normal.UseVisualStyleBackColor = true;
             this.normal.CheckedChanged += new System.EventHandler(this.normal_CheckedChanged);
             // 
-            // hard
+            // dificil
             // 
-            this.hard.AutoSize = true;
-            this.hard.Location = new System.Drawing.Point(116, 141);
-            this.hard.Name = "hard";
-            this.hard.Size = new System.Drawing.Size(49, 17);
-            this.hard.TabIndex = 3;
-            this.hard.Text = "Hard";
-            this.hard.UseVisualStyleBackColor = true;
-            this.hard.CheckedChanged += new System.EventHandler(this.hard_CheckedChanged);
+            this.dificil.AutoSize = true;
+            this.dificil.Location = new System.Drawing.Point(104, 141);
+            this.dificil.Name = "dificil";
+            this.dificil.Size = new System.Drawing.Size(52, 17);
+            this.dificil.TabIndex = 4;
+            this.dificil.Text = "Díficil";
+            this.dificil.UseVisualStyleBackColor = true;
+            this.dificil.CheckedChanged += new System.EventHandler(this.dificil_CheckedChanged);
             // 
             // expert
             // 
             this.expert.AutoSize = true;
-            this.expert.Location = new System.Drawing.Point(116, 164);
+            this.expert.Location = new System.Drawing.Point(104, 161);
             this.expert.Name = "expert";
-            this.expert.Size = new System.Drawing.Size(56, 17);
-            this.expert.TabIndex = 3;
+            this.expert.Size = new System.Drawing.Size(55, 17);
+            this.expert.TabIndex = 4;
             this.expert.Text = "Expert";
             this.expert.UseVisualStyleBackColor = true;
             this.expert.CheckedChanged += new System.EventHandler(this.expert_CheckedChanged);
             // 
-            // tabuleiro
+            // outro
             // 
-            this.tabuleiro.Location = new System.Drawing.Point(140, 184);
-            this.tabuleiro.Name = "tabuleiro";
-            this.tabuleiro.Size = new System.Drawing.Size(32, 20);
-            this.tabuleiro.TabIndex = 1;
-            this.tabuleiro.TextChanged += new System.EventHandler(this.tabuleiro_TextChanged);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(101, 187);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(36, 13);
-            this.label3.TabIndex = 2;
-            this.label3.Text = "Outro:";
+            this.outro.AutoSize = true;
+            this.outro.Location = new System.Drawing.Point(104, 182);
+            this.outro.Name = "outro";
+            this.outro.Size = new System.Drawing.Size(51, 17);
+            this.outro.TabIndex = 4;
+            this.outro.Text = "Outro";
+            this.outro.UseVisualStyleBackColor = true;
+            this.outro.CheckedChanged += new System.EventHandler(this.outro_CheckedChanged);
             // 
             // TelaInicial
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(292, 266);
+            this.ControlBox = false;
+            this.Controls.Add(this.outro);
             this.Controls.Add(this.expert);
-            this.Controls.Add(this.hard);
+            this.Controls.Add(this.dificil);
             this.Controls.Add(this.normal);
             this.Controls.Add(this.easy);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.label3);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.tabuleiro);
-            this.Controls.Add(this.qntBombasText);
+            this.Controls.Add(this.outroTamanho);
+            this.Controls.Add(this.qntBombasEscolhida);
             this.Controls.Add(this.nomeJogador);
             this.Controls.Add(this.OkNome);
             this.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -182,12 +189,12 @@
         private System.Windows.Forms.TextBox nomeJogador;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox qntBombasText;
-        private System.Windows.Forms.CheckBox easy;
-        private System.Windows.Forms.CheckBox normal;
-        private System.Windows.Forms.CheckBox hard;
-        private System.Windows.Forms.CheckBox expert;
-        private System.Windows.Forms.TextBox tabuleiro;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox qntBombasEscolhida;
+        private System.Windows.Forms.TextBox outroTamanho;
+        private System.Windows.Forms.RadioButton easy;
+        private System.Windows.Forms.RadioButton normal;
+        private System.Windows.Forms.RadioButton dificil;
+        private System.Windows.Forms.RadioButton expert;
+        private System.Windows.Forms.RadioButton outro;
     }
 }

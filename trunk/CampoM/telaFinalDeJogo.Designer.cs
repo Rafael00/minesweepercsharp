@@ -31,6 +31,7 @@
             this.resultado = new System.Windows.Forms.Label();
             this.Jogar = new System.Windows.Forms.Button();
             this.Sair = new System.Windows.Forms.Button();
+            this.vencedor = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // resultado
@@ -51,6 +52,7 @@
             this.Jogar.TabIndex = 1;
             this.Jogar.Text = "Jogar";
             this.Jogar.UseVisualStyleBackColor = true;
+            this.Jogar.Click += new System.EventHandler(this.Jogar_Click);
             // 
             // Sair
             // 
@@ -60,12 +62,24 @@
             this.Sair.TabIndex = 1;
             this.Sair.Text = "Sair";
             this.Sair.UseVisualStyleBackColor = true;
+            this.Sair.Click += new System.EventHandler(this.Sair_Click);
+            // 
+            // vencedor
+            // 
+            this.vencedor.AutoSize = true;
+            this.vencedor.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.vencedor.Location = new System.Drawing.Point(62, 13);
+            this.vencedor.Name = "vencedor";
+            this.vencedor.Size = new System.Drawing.Size(0, 29);
+            this.vencedor.TabIndex = 2;
+            this.vencedor.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // telaFinalDeJogo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(316, 164);
+            this.Controls.Add(this.vencedor);
             this.Controls.Add(this.Sair);
             this.Controls.Add(this.Jogar);
             this.Controls.Add(this.resultado);
@@ -82,5 +96,6 @@
         private System.Windows.Forms.Label resultado;
         private System.Windows.Forms.Button Jogar;
         private System.Windows.Forms.Button Sair;
+        private System.Windows.Forms.Label vencedor;
     }
 }

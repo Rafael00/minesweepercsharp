@@ -27,14 +27,11 @@ namespace CampoM
                        if (posicao != null)
                        {
                            int qntBombas = QntVizinhosVisivelBombas(tela, j, i);
-                           Console.WriteLine("BOMBAS VISIVEIS VIZINHAS A: [{0}, {1}] é: {2}", j, i, qntBombas);
                            if (qntBombas != tela[j, i].GetQntDeBombasVizinhas)
-                           {
-                               Console.WriteLine("ANALISOU A CASA: {0}, {1}", i, j);
                                return;
-                           }
                        }
                     }
+
             //caso nenhum dos casos seja satisfeito ele joga aleatório.
             posicao = new Posicao(aleatorio.Next(0, tela.GetLength(0)), aleatorio.Next(0, tela.GetLength(0)));
             while (tela[posicao.GetColuna, posicao.GetLinha].GetEstado.Equals("VISIVEL"))
@@ -87,7 +84,7 @@ namespace CampoM
             {
                 while (linha <= condicaoDeParadaI)
                 {
-                    if (tela[i + linha, j + coluna].ToString().Equals("CampoM.ComBomba") && tela[i + linha, j + coluna].GetEstado.Equals("VISIVEL"))
+                    if (tela[j + coluna, i + linha].ToString().Equals("CampoM.ComBomba") && tela[j + coluna, i + linha].GetEstado.Equals("VISIVEL"))
                         qntVizinhosBombas++;
                     linha += 1;
                 }
@@ -144,12 +141,12 @@ namespace CampoM
             }
        }
 
-        public void Draw(SpriteBatch spriteBatch, ImageManager Im)
+        public void Draw(SpriteBatch spriteBatch, SpriteFont contador, SpriteFont nome)
         {
-            int dezena = GetBombasEncontradas / 10;
-            int unidade = GetBombasEncontradas - (dezena * 10);
-            spriteBatch.Draw(Im.GetImagemContador(dezena), new Rectangle(0, 270, 29, 28), Color.White);
-            spriteBatch.Draw(Im.GetImagemContador(unidade), new Rectangle(0, 0, 29, 28), Color.White);
+            //Imprime na tela a quantidade de bombas encontradas ate o momento.
+            spriteBatch.DrawString(contador, ""+GetBombasEncontradas, new Vector2(34, 479), Color.Red);
+            //Imprie o nome do jogador.
+            spriteBatch.DrawString(nome, GetNomeJogador, new Vector2(22, 378), Color.DarkRed);
         }
     }
 }
