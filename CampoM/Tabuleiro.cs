@@ -7,17 +7,18 @@ namespace CampoM
     class Tabuleiro
     {
         private Casa[,] tela;
-        private int numBombas, tamanho;
+        private int numBombas, tamanho, localizacao;
         private Random aleatorio;
         private GraphicsDevice graficos;
         private string tipoUltimaCasa;
         private ImageManager Im;
 
-        public Tabuleiro(GraphicsDevice graficos, int tamanho, int numBombas, ImageManager imageManager)
+        public Tabuleiro(GraphicsDevice graficos, int tamanho, int numBombas, int localizacao, ImageManager imageManager)
         {
             this.graficos = graficos;
             this.numBombas = numBombas;
             this.tamanho = tamanho;
+            this.localizacao = localizacao;
             Im = imageManager;
             tela = new Casa[tamanho, tamanho];
             aleatorio = new Random();
@@ -77,27 +78,25 @@ namespace CampoM
         private void PreencheComCasaBomba()
         {
             int linha, coluna, numBombasAux = numBombas;
-
             while (numBombasAux > 0)
             {
                 linha = aleatorio.Next(0, tamanho);
                 coluna = aleatorio.Next(0, tamanho);
                 if (tela[linha, coluna] == null)
                 {
-                    tela[linha, coluna] = new ComBomba(graficos, linha, coluna);
+                    tela[linha, coluna] = new ComBomba(graficos, linha, coluna, localizacao);
                     numBombasAux--;
                 }
             }
-
         }
   
         private void PreencheComCasaSemBomba(){
             for (int i = 0; i < tela.GetLength(0); i++)
                 for (int j = 0; j < tela.GetLength(1); j++)
                     if (tela[i, j] == null)
-                        tela[i, j] = new SemBomba(graficos, i, j);
+                        tela[i, j] = new SemBomba(graficos, i, j, localizacao);
         }
-
+        
         public int getTamanho
         {
             get { return tamanho; }
@@ -114,7 +113,6 @@ namespace CampoM
         private void placar(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(Im.GetImagemPlacar, new Rectangle(0, 20, 124, 518), Color.White);
-
         }
 
         private void verificaVizinhos(int i, int j, string jogador)
@@ -161,7 +159,7 @@ namespace CampoM
         {
             for (int i = 0; i < tela.GetLength(0); i++)
                 for (int j = 0; j < tela.GetLength(1); j++)
-                    if (tela[i, j].getRetangulo.Contains(mouseX, mouseY) == true)
+                    if (tela[i, j].getRetangulo.Contains(mouseX, mouseY))
                         if (tela[i, j].GetEstado.Equals("NAO_VISIVEL"))
                         {
                             verificaVizinhos(i, j, "HUMANO");

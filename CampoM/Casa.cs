@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 
 namespace CampoM
@@ -12,17 +9,18 @@ namespace CampoM
         private Rectangle delimitador;
         private GraphicsDevice graficos;
         protected Texture2D _imagem;
-        private int posicaoX, posicaoY;
+        private int posicaoX, posicaoY, localizacao;
         private string estado = "NAO_VISIVEL";
         private int qntBombasVizinhas;
 
-        public Casa(GraphicsDevice graficos, int x, int y)
+        public Casa(GraphicsDevice graficos, int x, int y, int localizacao)
         {
             posicaoX = x;
             posicaoY = y;
             this.graficos = graficos;
+            this.localizacao = localizacao;
             _imagem = Texture2D.FromFile(graficos, @"imagens\casaEscondida.png");
-            delimitador = new Rectangle(x * 28 + 124, y * 28, 28, 28);
+            delimitador = new Rectangle(x * 28 + 124 + localizacao, y * 28 + localizacao, 28, 28);
         }
 
         public GraphicsDevice getGrafico
@@ -42,7 +40,7 @@ namespace CampoM
 
         public void draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(getTexturaCasa, new Rectangle(124 + getTexturaCasa.Width * posicaoX, getTexturaCasa.Height * posicaoY, getTexturaCasa.Width, getTexturaCasa.Height), Color.White);
+            spriteBatch.Draw(getTexturaCasa, new Rectangle(124 + getTexturaCasa.Width * posicaoX + localizacao, getTexturaCasa.Height * posicaoY + localizacao, getTexturaCasa.Width, getTexturaCasa.Height), Color.White);
         }
 
         public string GetEstado
@@ -56,12 +54,11 @@ namespace CampoM
         {
             this.GetEstado = "VISIVEL";
         }
-            
         
         public int GetQntDeBombasVizinhas
         {
-            get { return this.qntBombasVizinhas; }
-            set { this.qntBombasVizinhas = value; }
+            get { return qntBombasVizinhas; }
+            set { qntBombasVizinhas = value; }
         }
     }
 }

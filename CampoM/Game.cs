@@ -1,3 +1,4 @@
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -10,16 +11,19 @@ namespace CampoM
     /// </summary>
     public class Game : Microsoft.Xna.Framework.Game
     {
-        GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
-        Jogo jogo;
+        private MouseState ultimoEstado, estadoAtual;
+        private GraphicsDeviceManager graphics;
+        private SpriteBatch spriteBatch;
+        private SpriteFont contador, nome;
+        private Jogo jogo;
+        private TelaFinal telaFinal;
 
         public Game()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             Window.Title = "Campo Minado - Paradigmas de Linguagem de Programação";
-            this.IsMouseVisible = true;
+            IsMouseVisible = true;
          }
 
 
@@ -32,7 +36,11 @@ namespace CampoM
         /// </summary>
         protected override void Initialize()
         {
-              base.Initialize();
+            TelaInicial ti = new TelaInicial();
+            ti.ShowDialog();
+            jogo = new Jogo(ti.GetNomeJogador(), ti.getTamanho, ti.getQntBombas, ti.getLocalizao, GraphicsDevice);
+            SetTamanhoTela(560 + ti.getAumentaTela * 28, 684 + ti.getAumentaTela * 28);
+            base.Initialize();
         }
 
 
@@ -44,16 +52,15 @@ namespace CampoM
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            TelaInicial ti = new TelaInicial();
-            Application.Run(ti);
-            jogo = new Jogo(ti.getNomeJogador, ti.getTamanho, ti.getQntBombas, GraphicsDevice);
-            SetTamanhoTela();
+            contador = Content.Load<SpriteFont>("FonteArial");
+            nome = Content.Load<SpriteFont>("Nome");
+            telaFinal = new TelaFinal(GraphicsDevice);
         }
 
-        private void SetTamanhoTela()
+        private void SetTamanhoTela(int x, int y)
         {
-            graphics.PreferredBackBufferHeight = jogo.GetTamanhoTabuleiro * 28;
-            graphics.PreferredBackBufferWidth = jogo.GetTamanhoTabuleiro * 34;
+            graphics.PreferredBackBufferHeight = x;
+            graphics.PreferredBackBufferWidth = y;
             graphics.ApplyChanges();
         }
 
@@ -64,7 +71,7 @@ namespace CampoM
         /// </summary>
         protected override void UnloadContent()
         {
-
+            
         }
 
         /// <summary>
@@ -77,6 +84,16 @@ namespace CampoM
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == Microsoft.Xna.Framework.Input.ButtonState.Pressed)
                 this.Exit();
+            estadoAtual = Mouse.GetState();
+            if (estadoAtual.LeftButton == Microsoft.Xna.Framework.Input.ButtonState.Pressed
+                && ultimoEstado.LeftButton == Microsoft.Xna.Framework.Input.ButtonState.Released)
+                {
+                    if (telaFinal.GetRetanguloSair.Contains(Mouse.GetState().X, Mouse.GetState().Y))
+                    {
+                        Exit();
+                    }
+                }
+            ultimoEstado = estadoAtual;
             jogo.Update();
             base.Update(gameTime);
         }
@@ -90,9 +107,13 @@ namespace CampoM
             graphics.GraphicsDevice.Clear(Color.Black);
 
             spriteBatch.Begin();
-
-            jogo.Draw(spriteBatch);
-                       
+            if (jogo.VerificaFimDoJogo())
+            {
+                //Mostrar a tela de final do jogo.
+                spriteBatch.Draw(telaFinal.GetImagem, new Rectangle(0, 0, 367, 231), Color.White);
+                spriteBatch.DrawString(nome, jogo.GetVencedor.GetNomeJogador + " Ganhou!!!", new Vector2(126,60), Color.Blue);
+                SetTamanhoTela(231, 367);
+            }else jogo.Draw(spriteBatch, contador, nome);
             spriteBatch.End();
             base.Draw(gameTime);
         }
