@@ -7,7 +7,7 @@ namespace CampoM
 {
     class Jogo
     {
-        private int qntBombasRestantes, tamanhoTab, qntTotalDeBombas;
+        private int qntBombasRestantes, tamanhoTab, qntTotalDeBombas, posicaoSelecaoY, posicaoSelecaoX;
         private Tabuleiro tabuleiro;
         private const string HUMANO = "HUMANO";
         private const string PC = "PC";
@@ -41,17 +41,31 @@ namespace CampoM
             tabuleiro.draw(spriteBatch);
             jogadorPC.Draw(spriteBatch, contador, nome);
             jogadorHumano.Draw(spriteBatch, contador, nome);
+            ultimaCasaClicada(spriteBatch);
             spriteBatch.DrawString(contador, "" + qntBombasRestantes, new Vector2(49, 265), Color.White);
+
             if (jogadorDaVez == PC)
+            {
                 spriteBatch.Draw(Im.GetSetaPC, new Rectangle(10, 320, 29, 29), Color.White);
+                
+            }
             else spriteBatch.Draw(Im.GetSetaHumano, new Rectangle(10, 67, 29, 29), Color.White);
         }
         
+        private void ultimaCasaClicada(SpriteBatch spriteBatch)
+        {
+            Casa casa = tabuleiro.UltimaCasaClicada;
+            if (casa != null)
+            {
+                spriteBatch.Draw(Im.GetSelecaoAzul, new Rectangle(casa.GetPosicaoX, casa.GetPosicaoY, 30, 30), Color.White);
+                spriteBatch.Draw(Im.GetSelecaoVermelha, new Rectangle(posicaoSelecaoX, posicaoSelecaoY, 30, 30), Color.White);
+            }
+        }
+
         public void Update()
         {
             if (jogadorDaVez == PC)
             {
-                System.Threading.Thread.Sleep(1000);
                 AndroidJoga();
                 return;
             }
@@ -66,6 +80,11 @@ namespace CampoM
             ultimoEstado = estadoAtual;
         }
 
+        public string GetJogadorDaVez
+        {
+            get { return jogadorDaVez; }
+        }
+
         private void GerenciaJogada(int mouseX, int mouseY)
         {
             //Verifica se nenhuma casa foi clicada ou se a casa já foi clicada. Caso afirmativo nao faz nada.
@@ -73,7 +92,7 @@ namespace CampoM
                 //Nao faz nada se a casa já tivesse sido clicada antes.
                 return;
             //Se a casa clicada nao tiver bomba, eu passo a vez para android jogar.
-            if (tabuleiro.GetTipoDaUltimaCasaClicada.Equals("CampoM.SemBomba"))
+            if (tabuleiro.UltimaCasaClicada.ToString().Equals("CampoM.SemBomba"))
                 jogadorDaVez = PC;
             else
             {
@@ -108,6 +127,8 @@ namespace CampoM
         {
             jogadorPC.Joga(tabuleiro.GetTela);
             tabuleiro.JogadaPC(jogadorPC.GetColunaJogada, jogadorPC.GetLinhaJogada);
+            posicaoSelecaoX = tabuleiro.GetTela[jogadorPC.GetColunaJogada, jogadorPC.GetLinhaJogada].GetPosicaoX;
+            posicaoSelecaoY = tabuleiro.GetTela[jogadorPC.GetColunaJogada, jogadorPC.GetLinhaJogada].GetPosicaoY;
             //Caso ele acerte uma bomba ele verifica se o jogo acabou e se nao estiver acabado joga novamente.
             if (!VerificaSeAcertou(jogadorPC.GetColunaJogada, jogadorPC.GetLinhaJogada))
                 jogadorDaVez = HUMANO;

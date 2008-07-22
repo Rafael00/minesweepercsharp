@@ -10,7 +10,7 @@ namespace CampoM
         private int numBombas, tamanho, localizacao;
         private Random aleatorio;
         private GraphicsDevice graficos;
-        private string tipoUltimaCasa;
+        private Casa ultimaCasaClicada;
         private ImageManager Im;
 
         public Tabuleiro(GraphicsDevice graficos, int tamanho, int numBombas, int localizacao, ImageManager imageManager)
@@ -107,13 +107,9 @@ namespace CampoM
             for (int i = 0; i < tela.GetLength(0); i++)
                 for (int j = 0; j < tela.GetLength(1); j++)
                     tela[i, j].draw(spriteBatch);
-            placar(spriteBatch);
-        }
-
-        private void placar(SpriteBatch spriteBatch)
-        {
             spriteBatch.Draw(Im.GetImagemPlacar, new Rectangle(0, 20, 124, 518), Color.White);
         }
+                   
 
         private void verificaVizinhos(int i, int j, string jogador)
         {
@@ -144,10 +140,10 @@ namespace CampoM
             verificaVizinhos(i, j, "PC");
         }
 
-        public string GetTipoDaUltimaCasaClicada
+        public Casa UltimaCasaClicada
         {
-            get { return tipoUltimaCasa; }
-            set { tipoUltimaCasa = value; }
+            get { return ultimaCasaClicada; }
+            set { ultimaCasaClicada = value; }
         }
 
         public Casa[,] GetTela
@@ -163,7 +159,7 @@ namespace CampoM
                         if (tela[i, j].GetEstado.Equals("NAO_VISIVEL"))
                         {
                             verificaVizinhos(i, j, "HUMANO");
-                            tipoUltimaCasa = tela[i,j].ToString();
+                            ultimaCasaClicada = tela[i, j];
                             return false;
                         }
                         //Retorna true se a casa ja tinha sido clicada antes.

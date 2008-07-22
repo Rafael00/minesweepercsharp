@@ -1,8 +1,7 @@
-using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System.Windows.Forms;
+
 
 namespace CampoM
 {
@@ -17,6 +16,7 @@ namespace CampoM
         private SpriteFont contador, nome;
         private Jogo jogo;
         private TelaFinal telaFinal;
+        private int ultimaAtualizacao;
 
         public Game()
         {
@@ -94,7 +94,14 @@ namespace CampoM
                     }
                 }
             ultimoEstado = estadoAtual;
-            jogo.Update();
+            ultimaAtualizacao += gameTime.ElapsedGameTime.Milliseconds;
+            if (jogo.GetJogadorDaVez.Equals("PC") && (ultimaAtualizacao >= 1000))
+            {
+                jogo.Update();
+                ultimaAtualizacao = 0;
+            }
+            else if (jogo.GetJogadorDaVez.Equals("HUMANO"))
+                jogo.Update();
             base.Update(gameTime);
         }
 
@@ -111,7 +118,7 @@ namespace CampoM
             {
                 //Mostrar a tela de final do jogo.
                 spriteBatch.Draw(telaFinal.GetImagem, new Rectangle(0, 0, 367, 231), Color.White);
-                spriteBatch.DrawString(nome, jogo.GetVencedor.GetNomeJogador + " Ganhou!!!", new Vector2(126,60), Color.Blue);
+                spriteBatch.DrawString(nome, jogo.GetVencedor.GetNomeJogador + " Ganhou!!!", new Vector2(112,70), Color.Blue);
                 SetTamanhoTela(231, 367);
             }else jogo.Draw(spriteBatch, contador, nome);
             spriteBatch.End();

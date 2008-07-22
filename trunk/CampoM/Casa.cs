@@ -38,6 +38,16 @@ namespace CampoM
             get{ return this.delimitador;}
         }
 
+        public int GetPosicaoX
+        {
+            get { return posicaoX * 28 + 123 + localizacao; }
+        }
+
+        public int GetPosicaoY
+        {
+            get { return posicaoY * 28 + localizacao; }
+        }
+
         public void draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(getTexturaCasa, new Rectangle(124 + getTexturaCasa.Width * posicaoX + localizacao, getTexturaCasa.Height * posicaoY + localizacao, getTexturaCasa.Width, getTexturaCasa.Height), Color.White);
