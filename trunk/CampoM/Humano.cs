@@ -5,18 +5,25 @@ namespace CampoM
 {
     class Humano : Jogador
     {
-        private string nomeJogador;
 
+        /// <summary>
+        /// Cria um jogador Humano.
+        /// </summary>
+        /// <param name="nomeJogador">Nome do jogador.</param>
         public Humano(string nomeJogador) : base (nomeJogador)
         {
-            this.nomeJogador = nomeJogador;
         }
 
-
+        /// <summary>
+        /// Desenha a quantidade de bombas acertadas por este jogador e o seu nome na tela.
+        /// </summary>
+        /// <param name="spriteBatch"></param>
+        /// <param name="contador"></param>
+        /// <param name="nome"></param>
         public void Draw(SpriteBatch spriteBatch, SpriteFont contador, SpriteFont nome)
         {
-            spriteBatch.DrawString(contador, "" + GetBombasEncontradas, new Vector2(34, 224), Color.Blue);
-            spriteBatch.DrawString(nome, nomeJogador, new Vector2(15, 122), Color.Blue);
+            spriteBatch.DrawString(contador, "" + BombasEncontradas, new Vector2(34, 224), Color.Blue);
+            spriteBatch.DrawString(nome, GetNomeJogador, new Vector2(15, 122), Color.Blue);
         }
 
     }

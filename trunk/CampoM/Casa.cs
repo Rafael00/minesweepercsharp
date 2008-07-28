@@ -7,65 +7,100 @@ namespace CampoM
     public class Casa
     {
         private Rectangle delimitador;
-        private GraphicsDevice graficos;
         protected Texture2D _imagem;
         private int posicaoX, posicaoY, localizacao;
         private string estado = "NAO_VISIVEL";
         private int qntBombasVizinhas;
 
+        /// <summary>
+        /// Cria uma casa. Onde os parâmetros x, y determina a posição da casa e o parâmetro localização serve para centralizar a casa no meio da tela.
+        /// </summary>
+        /// <param name="graficos"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="localizacao"></param>
         public Casa(GraphicsDevice graficos, int x, int y, int localizacao)
         {
             posicaoX = x;
             posicaoY = y;
-            this.graficos = graficos;
             this.localizacao = localizacao;
-            _imagem = Texture2D.FromFile(graficos, @"imagens\casaEscondida.png");
+            //Iniciamente todas as casas possuem a mesma imagem. Pois estão escondidas.
+            _imagem = Texture2D.FromFile(graficos, @"Content\imagens\casaEscondida.png");
+            //Retangulo responsável pela delimitação da casa. Tornando possível saber se o clique do mouse foi nesta casa.
             delimitador = new Rectangle(x * 28 + 124 + localizacao, y * 28 + localizacao, 28, 28);
         }
-
-        public GraphicsDevice getGrafico
+        /// <summary>
+        /// 
+        /// </summary>
+/*        public GraphicsDevice GetGrafico
         {
-            get { return this.graficos; }
+            get { return graficos; }
+        }
+        */
+
+        /// <summary>
+        /// Retorna a imagem atual da casa.
+        /// </summary>
+        public Texture2D GetTexturaCasa
+        {
+            get { return _imagem; }
         }
 
-        public Texture2D getTexturaCasa
+        /// <summary>
+        /// Retorna o retangulo delimitador desta casa.
+        /// </summary>
+        public Rectangle GetRetangulo
         {
-            get { return this._imagem; }
+            get{ return delimitador;}
         }
 
-        public Rectangle getRetangulo
-        {
-            get{ return this.delimitador;}
-        }
-
+        /// <summary>
+        /// Retorna a posição X desta casa. Onde 28 é a largura da casa, o 123 é a largura do placar e a localização é o ajuste para centralizar a casa.
+        /// </summary>
         public int GetPosicaoX
         {
             get { return posicaoX * 28 + 123 + localizacao; }
         }
 
+        /// <summary>
+        /// Retorna a posição Y desta casa.
+        /// </summary>
         public int GetPosicaoY
         {
             get { return posicaoY * 28 + localizacao; }
         }
 
-        public void draw(SpriteBatch spriteBatch)
+        /// <summary>
+        /// Desenha está casa na tela.
+        /// </summary>
+        /// <param name="spriteBatch"></param>
+        public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(getTexturaCasa, new Rectangle(124 + getTexturaCasa.Width * posicaoX + localizacao, getTexturaCasa.Height * posicaoY + localizacao, getTexturaCasa.Width, getTexturaCasa.Height), Color.White);
+            spriteBatch.Draw(GetTexturaCasa, new Rectangle(124 + GetTexturaCasa.Width * posicaoX + localizacao, GetTexturaCasa.Height * posicaoY + localizacao, GetTexturaCasa.Width, GetTexturaCasa.Height), Color.White);
         }
 
-        public string GetEstado
+        /// <summary>
+        /// Retorna ou altera estado atual da casa. Visível ou não visível.
+        /// </summary>
+        public string Estado
         {
-
-            get{ return this.estado;}
-            set {this.estado = value; }
+            get{ return estado;}
+            set {estado = value; }
         }
 
-        public virtual void mudaEstado(Texture2D img)
+        /// <summary>
+        /// Atualiza o estado da casa no momento em que ela é clicada, mudando o seu estado e sua imagem.
+        /// </summary>
+        /// <param name="img"></param>
+        public virtual void MudaEstado(Texture2D img)
         {
-            this.GetEstado = "VISIVEL";
+            Estado = "VISIVEL";
         }
         
-        public int GetQntDeBombasVizinhas
+        /// <summary>
+        /// Retorna ou atribui a quantidade de bombas vizinhas a esta casa.
+        /// </summary>
+        public int QntDeBombasVizinhas
         {
             get { return qntBombasVizinhas; }
             set { qntBombasVizinhas = value; }
