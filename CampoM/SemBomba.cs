@@ -10,9 +10,13 @@ namespace CampoM
         {
         }
 
-        public override void mudaEstado(Texture2D img)
+        /// <summary>
+        /// Muda o estado da casa, para visivel e sua respectiva imagem.
+        /// </summary>
+        /// <param name="img">Imagem que irá revelar seu valor.</param>
+        public override void MudaEstado(Texture2D img)
         {
-            base.mudaEstado(img);
+            base.MudaEstado(img);
             _imagem = img;
         }
     }

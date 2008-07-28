@@ -13,6 +13,14 @@ namespace CampoM
         private Casa ultimaCasaClicada;
         private ImageManager Im;
 
+        /// <summary>
+        /// Cria um tabuleiro do jogo.
+        /// </summary>
+        /// <param name="graficos"></param>
+        /// <param name="tamanho">Tamanho do tabuleiro.</param>
+        /// <param name="numBombas">Número de bombas deste tabuleiro.</param>
+        /// <param name="localizacao">Centralização das casas.</param>
+        /// <param name="imageManager">Manipulador das imagens.</param>
         public Tabuleiro(GraphicsDevice graficos, int tamanho, int numBombas, int localizacao, ImageManager imageManager)
         {
             this.graficos = graficos;
@@ -22,16 +30,22 @@ namespace CampoM
             Im = imageManager;
             tela = new Casa[tamanho, tamanho];
             aleatorio = new Random();
-            preencheTabuleiro();
+            PreencheTabuleiro();
         }
 
-        private void preencheTabuleiro()
+        /// <summary>
+        /// Preenche o tabuleiro.
+        /// </summary>
+        private void PreencheTabuleiro()
         {
             PreencheComCasaBomba();
             PreencheComCasaSemBomba();
             CalculaQntBombasVizinhas();
         }
 
+        /// <summary>
+        /// Calcula a quantidade de bombas vizinhas a cada casa.
+        /// </summary>
         private void CalculaQntBombasVizinhas()
         {
             int linha, coluna, condicaoDeParadaI, condicaoDeParadaJ, qntBombasVizinhas = 0;
@@ -40,7 +54,7 @@ namespace CampoM
                 for (int j = 0; j < tela.GetLength(1); j++){
                     if (tela[i, j].GetType().FullName.Equals("CampoM.ComBomba"))
                     {
-                        tela[i, j].GetQntDeBombasVizinhas = 9;
+                        tela[i, j].QntDeBombasVizinhas = 9;
                         continue;
                     }
                     if ( i == 0)
@@ -70,11 +84,14 @@ namespace CampoM
                             linha = 0;
                         else linha = -1;
                     }
-                    tela[i, j].GetQntDeBombasVizinhas = qntBombasVizinhas;
+                    tela[i, j].QntDeBombasVizinhas = qntBombasVizinhas;
                     qntBombasVizinhas = 0;
                 }
         }
 
+        /// <summary>
+        /// Preenche o tabuleiro com casas bombas. Com igual probabilidade de cada ser bomba. 
+        /// </summary>
         private void PreencheComCasaBomba()
         {
             int linha, coluna, numBombasAux = numBombas;
@@ -90,76 +107,110 @@ namespace CampoM
             }
         }
   
+        /// <summary>
+        /// Preenche o restante(casas que não foram escolhidas no método PreencheComCasaBomba) do tabuleiro com casas sem bombas.
+        /// </summary>
         private void PreencheComCasaSemBomba(){
             for (int i = 0; i < tela.GetLength(0); i++)
                 for (int j = 0; j < tela.GetLength(1); j++)
                     if (tela[i, j] == null)
                         tela[i, j] = new SemBomba(graficos, i, j, localizacao);
         }
-        
-        public int getTamanho
+
+        /// <summary>
+        /// Retorna o tamanho do tabuleiro.
+        /// </summary>
+        public int GetTamanho
         {
             get { return tamanho; }
         }
 
-        public void draw(SpriteBatch spriteBatch)
+        /// <summary>
+        /// Desenha cada casa e o placar do jogo.
+        /// </summary>
+        /// <param name="spriteBatch"></param>
+        public void Draw(SpriteBatch spriteBatch)
         {
             for (int i = 0; i < tela.GetLength(0); i++)
                 for (int j = 0; j < tela.GetLength(1); j++)
-                    tela[i, j].draw(spriteBatch);
+                    tela[i, j].Draw(spriteBatch);
             spriteBatch.Draw(Im.GetImagemPlacar, new Rectangle(0, 20, 124, 518), Color.White);
         }
-                   
-
-        private void verificaVizinhos(int i, int j, string jogador)
+        
+        /// <summary>
+        /// Verifica recursivamente, caso a casa seja vazia, se os vizinhos desta casa também são vazios. E muda o estado desta casa.
+        /// </summary>
+        /// <param name="i">Posição i da casa.</param>
+        /// <param name="j">Posição j da casa.</param>
+        /// <param name="jogador">Jogador da vez.</param>
+        private void VerificaVizinhos(int i, int j, string jogador)
         {
             if (i >= 0 && j >= 0 && i <= (tela.GetLength(0) - 1) && j <= (tela.GetLength(1) - 1))
-                if (tela[i, j].GetEstado == "NAO_VISIVEL" && tela[i, j].GetQntDeBombasVizinhas == 0)
+                if (tela[i, j].Estado == "NAO_VISIVEL" && tela[i, j].QntDeBombasVizinhas == 0)
                 {
-                    tela[i, j].mudaEstado(this.Im.GetImagemCasa(0));
-                    verificaVizinhos(i - 1, j - 1, jogador);
-                    verificaVizinhos(i - 1, j, jogador);
-                    verificaVizinhos(i - 1, j + 1, jogador);
-                    verificaVizinhos(i, j - 1, jogador);
-                    verificaVizinhos(i, j + 1, jogador);
-                    verificaVizinhos(i + 1, j - 1, jogador);
-                    verificaVizinhos(i + 1, j, jogador);
-                    verificaVizinhos(i + 1, j + 1, jogador);
+                    tela[i, j].MudaEstado(Im.GetImagemCasa(0));
+                    //Chamadas recursivas para verificar se  os vizinhos desta casa também são vazios.
+                    VerificaVizinhos(i - 1, j - 1, jogador);
+                    VerificaVizinhos(i - 1, j, jogador);
+                    VerificaVizinhos(i - 1, j + 1, jogador);
+                    VerificaVizinhos(i, j - 1, jogador);
+                    VerificaVizinhos(i, j + 1, jogador);
+                    VerificaVizinhos(i + 1, j - 1, jogador);
+                    VerificaVizinhos(i + 1, j, jogador);
+                    VerificaVizinhos(i + 1, j + 1, jogador);
                 }
-                else if (tela[i, j].GetQntDeBombasVizinhas == 9 && jogador.Equals("PC"))
+                else if (tela[i, j].QntDeBombasVizinhas == 9 && jogador.Equals("PC"))
                         //Recebe bandeira vermelha.    
-                        tela[i, j].mudaEstado(Im.GetImagemCasa(10));
-                else if (tela[i, j].GetQntDeBombasVizinhas == 9 && jogador.Equals("HUMANO"))
+                        tela[i, j].MudaEstado(Im.GetImagemCasa(10));
+                else if (tela[i, j].QntDeBombasVizinhas == 9 && jogador.Equals("HUMANO"))
                         //Recebe bandeira vermelha.    
-                        tela[i, j].mudaEstado(Im.GetImagemCasa(11));
-                else tela[i, j].mudaEstado(Im.GetImagemCasa(tela[i,j].GetQntDeBombasVizinhas));
+                        tela[i, j].MudaEstado(Im.GetImagemCasa(11));
+                else tela[i, j].MudaEstado(Im.GetImagemCasa(tela[i,j].QntDeBombasVizinhas));
         }
 
+        /// <summary>
+        /// Processa a jogada do PC.
+        /// </summary>
+        /// <param name="i">Posição i da jogada.</param>
+        /// <param name="j">Posição j da jogada.</param>
         public void JogadaPC(int i, int j)
         {
-            verificaVizinhos(i, j, "PC");
+            VerificaVizinhos(i, j, "PC");
         }
 
+        /// <summary>
+        /// Retorna a última casa clicada.
+        /// </summary>
         public Casa UltimaCasaClicada
         {
             get { return ultimaCasaClicada; }
             set { ultimaCasaClicada = value; }
         }
 
+        /// <summary>
+        /// Retorna a tela atual do jogo.
+        /// </summary>
         public Casa[,] GetTela
         {
             get { return tela; }
         }
 
+        /// <summary>
+        /// Verifica se uma casa já foi clicada. Caso contrário faz as verificações nesta casa.
+        /// </summary>
+        /// <param name="mouseX"></param>
+        /// <param name="mouseY"></param>
+        /// <returns>True se a casa já tinha sido clicada.</returns>
         public bool CasaClicada(int mouseX, int mouseY)
         {
             for (int i = 0; i < tela.GetLength(0); i++)
                 for (int j = 0; j < tela.GetLength(1); j++)
-                    if (tela[i, j].getRetangulo.Contains(mouseX, mouseY))
-                        if (tela[i, j].GetEstado.Equals("NAO_VISIVEL"))
+                    //Verifica se a posição do clique está dentro do quadrado delimitador desta casa.
+                    if (tela[i, j].GetRetangulo.Contains(mouseX, mouseY))
+                        if (tela[i, j].Estado.Equals("NAO_VISIVEL"))
                         {
-                            verificaVizinhos(i, j, "HUMANO");
-                            ultimaCasaClicada = tela[i, j];
+                            VerificaVizinhos(i, j, "HUMANO");
+                            UltimaCasaClicada = tela[i, j];
                             return false;
                         }
                         //Retorna true se a casa ja tinha sido clicada antes.
