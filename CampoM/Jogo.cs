@@ -45,7 +45,7 @@ namespace CampoM
         /// </summary>
         public int GetTamanhoTabuleiro
         {
-            get {return tabuleiro.getTamanho; }
+            get {return tabuleiro.GetTamanho; }
         }
 
         /// <summary>
